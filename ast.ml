@@ -32,11 +32,6 @@ type transition = Transition of state * inputsymbol * stacksymbol * state * remp
 
 type automate = Automate of declaration * transition list
 
-
-
-
-
-
 let as_string_lettre lettre = match lettre with
   | Epsilon -> "esp"
   | Lettre x -> x

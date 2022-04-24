@@ -1,11 +1,12 @@
 open Ast
 open Printf
 
-let execute (auto:automate) (input:inputsymbols) :bool = 
+let execute (auto:automate) (input:inputsymbols) :unit = 
   let rec pop (stack:stacksymbols) (acc:stacksymbols) = match stack, acc with
   | [], [] -> failwith("Empty stack, cannot pop")
-  | [], acc -> acc
+  | x::[], acc -> List.rev acc
   | x::xs, acc -> pop xs (x::acc)
+  | _ -> failwith("J'espere qu'on arrive pas la")
 
   and get_declaration (auto:automate) :declaration = match auto with
   | Automate(decl, transi) -> decl
@@ -56,11 +57,17 @@ let execute (auto:automate) (input:inputsymbols) :bool =
 
     in remplace stack (get_remplacement transi), get_new_state transi
 
-  and run (stack:stacksymbols) (state:state) (input:inputsymbols) (transis:transition list):bool = match input with 
-| [] -> if List.length stack = 0 then true else false
-| input_c::follow -> let transi = find_applicable_transition stack state input_c transis 
+  and run (stack:stacksymbols) (state:state) (input:inputsymbols) (transis:transition list) :unit = match input, stack with 
+  | [], [] -> printf "stack : %s\tstate : %s\tinput : %s\t\tValidated\n" 
+              (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list input)
+  | [], stack -> let transi = find_applicable_transition stack state (Symbol Epsilon) transis
+                in let tuple = apply_transi stack state [(Symbol Epsilon)] transi
+                in let () = printf "stack : %s\tstate : %s\tinput : %s\ttransition prise : %s\n" 
+                (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list [(Symbol Epsilon)]) (as_string_transi transi)
+                in run (fst tuple) (snd tuple) [] transis
+  | input_c::follow, stack -> let transi = find_applicable_transition stack state input_c transis 
                       in let tuple = apply_transi stack state input transi
-                      in let () = printf "stack : %s, state : %s, input : %s, transition prise : %s\n" 
+                      in let () = printf "stack : %s\tsttate : %s\tinput : %s\ttransition prise : %s\n" 
                       (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list input) (as_string_transi transi)
                       in run (fst tuple) (snd tuple) follow transis
 
