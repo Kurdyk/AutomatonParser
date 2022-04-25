@@ -106,3 +106,8 @@ let get_remplacement (transi:transition) :remplacement = match transi with
 let get_new_state (transi:transition) :state = match transi with
 | Transition(_, _, _, state, _) -> state
 
+(*From string*)
+
+let rec to_sym (str:string) (acc:inputsymbols) :inputsymbols = match str with
+    | "" -> List.rev acc
+    | s -> to_sym (String.sub s 1 ((String.length s) - 1)) (Symbol(Lettre(String.make 1 (String.get s 0)))::acc)

@@ -15,7 +15,9 @@ let execute (auto:automate) (input:inputsymbols) :unit =
     | x::xs -> top_stack xs
 
     in match transis with
-    | [] -> failwith("No applicable transitions")
+    | [] -> let error_msg = sprintf("No applicable transitions from:\nstack: %s\tstate: %s\tinput: %s")
+           (as_string_sym_list stack) (as_string_sym state) (as_string_sym input_c)
+            in failwith error_msg
     | transi::follow ->
               if top_stack stack = get_necessary_top transi
               && state = get_necessary_state transi
