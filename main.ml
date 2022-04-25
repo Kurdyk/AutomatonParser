@@ -1,11 +1,12 @@
 let lexbuf = Lexing.from_channel stdin 
 
-(*try*)
-  let automaton = Parser.automate Lexer.main lexbuf 
-(*with _ ->
-  let position = lexbuf.lex_curr_p in 
-  let error_msg = sprintf "Your error is line %d, char %d" position.pos_lnum (position.pos_cnum - position.pos_bol)
-  in failwith error_msg*)
+  let automaton = 
+    try
+      Parser.automate Lexer.main lexbuf 
+  with _ ->
+    let position = lexbuf.lex_curr_p in 
+    let error_msg = Printf.sprintf "Parsing failure at line %d, char %d" position.pos_lnum (position.pos_cnum - position.pos_bol)
+    in failwith error_msg
 
 let _ = Printf.printf "\027[31mParse:\n\027[0m%s" (Ast.as_string_auto automaton)
 
