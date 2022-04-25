@@ -8,32 +8,11 @@ let execute (auto:automate) (input:inputsymbols) :unit =
   | x::xs, acc -> pop xs (x::acc)
   | _ -> failwith("J'espere qu'on arrive pas la")
 
-  and get_declaration (auto:automate) :declaration = match auto with
-  | Automate(decl, transi) -> decl
-
-  and get_init_stack (decl:declaration) :inputsymbol = match decl with
-  | Declaration(_, _, _, _, s) -> s
-
-  and get_init_state (decl:declaration) :state = match decl with
-  | Declaration(_, _, _, state, _) -> state
-
-  and get_transitions (auto:automate) :transition list = match auto with
-  | Automate(decl, transis) -> transis
-
   and find_applicable_transition (stack:stacksymbols) (state:state) (input_c:inputsymbol) (transis: transition list) =
     let rec top_stack (stack:stacksymbols) :stacksymbol = match stack with
     | [] -> failwith("Empty stack")
     | x::[] -> x
     | x::xs -> top_stack xs
-
-    and get_necessary_top (transi:transition) :stacksymbol = match transi with 
-    | Transition(_, _, top, _, _) -> top
-
-    and get_necessary_state (transi:transition) :state = match transi with 
-    | Transition(state, _, _, _, _) -> state
-
-    and get_necessary_input (transi:transition) :inputsymbol = match transi with 
-    | Transition(_, input_c, _ , _, _) -> input_c
 
     in match transis with
     | [] -> failwith("No applicable transitions")
@@ -42,12 +21,6 @@ let execute (auto:automate) (input:inputsymbols) :unit =
               && state = get_necessary_state transi
               && input_c = get_necessary_input transi 
               then transi else find_applicable_transition stack state input_c follow
-
-  and get_remplacement (transi:transition) :remplacement = match transi with
-  | Transition(_, _, _, _, r) -> r
-
-  and get_new_state (transi:transition) :state = match transi with
-  | Transition(_, _, _, state, _) -> state
 
   and apply_transi (stack:stacksymbols) (state:state) (input:inputsymbols) (transi:transition) :(stacksymbols * state) =
     let rec remplace (stack:stacksymbols) (rempl:remplacement) :stacksymbols = match rempl with
@@ -63,11 +36,12 @@ let execute (auto:automate) (input:inputsymbols) :unit =
   | [], stack -> let transi = find_applicable_transition stack state (Symbol Epsilon) transis
                 in let tuple = apply_transi stack state [(Symbol Epsilon)] transi
                 in let () = printf "stack : %s\tstate : %s\tinput : %s\ttransition prise : %s\n" 
-                (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list [(Symbol Epsilon)]) (as_string_transi transi)
+                (as_string_sym_list stack) (as_string_sym state) ("") (as_string_transi transi)
                 in run (fst tuple) (snd tuple) [] transis
+  | input, [] when List.length input > 0 -> failwith("Empty stack but there is still input")
   | input_c::follow, stack -> let transi = find_applicable_transition stack state input_c transis 
                       in let tuple = apply_transi stack state input transi
-                      in let () = printf "stack : %s\tsttate : %s\tinput : %s\ttransition prise : %s\n" 
+                      in let () = printf "stack : %s\tstate : %s\tinput : %s\ttransition prise : %s\n" 
                       (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list input) (as_string_transi transi)
                       in run (fst tuple) (snd tuple) follow transis
 
