@@ -3,3 +3,4 @@ all:
 
 clean:
 	+$(MAKE) clean -C src
+	rm parser
