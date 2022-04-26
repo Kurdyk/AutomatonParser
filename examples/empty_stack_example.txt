@@ -6,7 +6,7 @@ initial stack: Z
 
 transitions:
 
-(1 ,a ,Z ,1 , Z ; A )
+(1, a, Z, 1, )
 (1 ,b ,Z ,1 , Z ; B )
 (1 ,c ,Z ,2 , Z )
 
@@ -20,6 +20,5 @@ transitions:
 
 (2 ,a ,A ,2 ,)
 (2 ,b ,B ,2 ,)
-
 
 (2 , ,Z ,2 ,)

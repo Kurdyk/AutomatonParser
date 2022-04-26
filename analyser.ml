@@ -41,9 +41,9 @@ let analyse_transistions_information (auto:automate) =
       | Symbol(x) -> match x with 
         | Epsilon -> false 
         | _ -> not (List.mem remplace_symbol accepted_stack)) rempl_sym_list)
-    then let error = sprintf("A symbol if this transition: %s is not declared.") (as_string_transi transi) in failwith error
+    then let error = sprintf("A symbol in this transition: %s is not declared.") (as_string_transi transi) in failwith error
     else ()) transis
-  in printf "Transitions seems good.\n"
+  in printf "Transitions seem good.\n"
 
 let analyse_determinization (auto:automate) =
   let transis = get_transitions auto in
