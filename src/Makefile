@@ -1,4 +1,3 @@
-
 MENHIR=menhir
 OCAMLC=ocamlc
 OCAMLLEX=ocamllex
