@@ -136,7 +136,9 @@ let rec remplace_add r z = match r with
   | Remplace(ssym, rempsym) -> Remplace(ssym, (remplace_add rempsym z))
 
 
-
+(**
+Convert an automaton from the part 3 of the project to one of the part 1 and 2
+*)
 let convert_v2_v1 (auto:automate2):automate = 
   let rec build_transitions (decl:declaration) (bl:block) : transition list= 
     let rec build_default_transitions (state_start:state) (inputsym:inputsymbol) (stacksym:stacksymbol) (state_end:state) (replac:remplacement) = 

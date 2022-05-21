@@ -1,6 +1,9 @@
 open Ast
 open Printf
 
+(**
+Analyse the initial stack symbol to assure that it is a declared stack symbol
+*)
 let analyse_init_stack (auto:automate) = 
   let decl = get_declaration auto in
   let init_stack = get_init_stack decl in
@@ -10,6 +13,9 @@ let analyse_init_stack (auto:automate) =
     (as_string_sym init_stack) (as_string_sym_list accepted_stack) in failwith error
     else printf("Initial stack is okay.\n")
 
+(**
+Analyse the initial state to assure that it is a declared state.
+*)
 let analyse_init_state (auto:automate) =
   let decl = get_declaration auto in
   let init_state = get_init_state decl in
@@ -19,6 +25,9 @@ let analyse_init_state (auto:automate) =
     (as_string_sym init_state) (as_string_sym_list accepted_state) in failwith error
     else printf("Initial state is okay.\n")
 
+(**
+Analyse the transitions to assure that no unknowned symbol are in each.
+*)
 let analyse_transistions_information (auto:automate) =
 
   let rec remplacement_as_list (rempl:remplacement) (acc:stacksymbols) :stacksymbols = match rempl with
@@ -45,6 +54,9 @@ let analyse_transistions_information (auto:automate) =
     else ()) transis
   in printf "Transitions seem good.\n"
 
+(**
+Analyse the transitions to assure that none causes an indetermination
+*)
 let analyse_determinization (auto:automate) =
   let transis = get_transitions auto in
   let _ = List.map

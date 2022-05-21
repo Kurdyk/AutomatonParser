@@ -1,13 +1,23 @@
 open Ast
 open Printf
 
+(**
+  Take an automate and an input and exexute the automate to validate or not the input.
+  *)
 let execute (auto:automate) (input:inputsymbols) :unit = 
+  
+  (**
+  Pop the last symbol of the stack    
+  *)
   let rec pop (stack:stacksymbols) (acc:stacksymbols) = match stack, acc with
   | [], [] -> failwith("Empty stack, cannot pop")
   | x::[], acc -> List.rev acc
   | x::xs, acc -> pop xs (x::acc)
   | _ -> failwith("J'espere qu'on arrive pas la")
 
+  (**
+  Find a transition that be taken from the current state, input and last symbol of the stack   
+  *)
   and find_applicable_transition (stack:stacksymbols) (state:state) (input_c:inputsymbol) (transis: transition list) =
     let rec top_stack (stack:stacksymbols) :stacksymbol = match stack with
     | [] -> failwith("Empty stack")
@@ -24,6 +34,9 @@ let execute (auto:automate) (input:inputsymbols) :unit =
               && input_c = get_necessary_input transi 
               then transi else find_applicable_transition stack state input_c follow
 
+  (**
+  Apply a transition by modifying the stack and the state of the automaton
+  *)
   and apply_transi (stack:stacksymbols) (state:state) (input:inputsymbols) (transi:transition) :(stacksymbols * state) =
     let rec remplace (stack:stacksymbols) (rempl:remplacement) :stacksymbols = match rempl with
     | Empty -> pop stack []
@@ -32,6 +45,9 @@ let execute (auto:automate) (input:inputsymbols) :unit =
 
     in remplace stack (get_remplacement transi), get_new_state transi
 
+  (**
+  Main function run the automaton and validate or not the input
+  *)
   and run (stack:stacksymbols) (state:state) (input:inputsymbols) (transis:transition list) :unit = match input, stack with 
   | [], [] -> printf "stack : %s\tstate : %s\tinput : %s\t\tValidated\n" 
               (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list input)
