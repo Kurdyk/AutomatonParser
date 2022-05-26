@@ -2,11 +2,13 @@
 open Parser
 }
 
-let layout = [ ' ' '\t' '\n']
+let layout = [ ' ' '\t']
+let new_line = [ '\n' '\r' ]
 let lettre = ['0'-'9' 'a'-'z' 'A'-'Z']
 
 rule main = parse
   | layout		{ main lexbuf }
+  | new_line   {let () = Lexing.new_line(lexbuf) in main lexbuf}
   | ')'			{ RPAREN }
   | '('			{ LPAREN }
   | "input symbols:" { INPUT_SYM }
