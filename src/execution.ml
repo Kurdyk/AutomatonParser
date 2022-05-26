@@ -31,7 +31,7 @@ let execute (auto:automate) (input:inputsymbols) :unit =
     | transi::follow ->
               if top_stack stack = get_necessary_top transi
               && state = get_necessary_state transi
-              && input_c = get_necessary_input transi 
+              && (input_c = get_necessary_input transi || get_necessary_input transi = (Symbol Epsilon))
               then transi else find_applicable_transition stack state input_c follow
 
   (**
@@ -61,7 +61,9 @@ let execute (auto:automate) (input:inputsymbols) :unit =
                       in let tuple = apply_transi stack state input transi
                       in let () = printf "stack : %s\tstate : %s\tinput : %s\ttransition prise : %s\n" 
                       (as_string_sym_list stack) (as_string_sym state) (as_string_sym_list input) (as_string_transi transi)
-                      in run (fst tuple) (snd tuple) follow transis
+                      in if get_necessary_input transi <> Symbol Epsilon 
+                        then run (fst tuple) (snd tuple) follow transis
+                        else run (fst tuple) (snd tuple) (input_c::follow) transis 
 
   in let transis = get_transitions auto
   in let stack = [get_init_stack (get_declaration auto)]

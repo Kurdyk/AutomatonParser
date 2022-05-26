@@ -62,7 +62,9 @@ let analyse_determinization (auto:automate) =
   let _ = List.map
     (fun t1 -> List.map (fun t2 ->
       if get_necessary_state t1 = get_necessary_state t2 
-      && get_necessary_input t1 = get_necessary_input t2
+      && (get_necessary_input t1 = get_necessary_input t2 
+        || get_necessary_input t1 = Symbol Epsilon
+        || get_necessary_input t2 = Symbol Epsilon)
       && get_necessary_top t1 = get_necessary_top t2 
       && (get_new_state t1 <> get_new_state t2 || get_remplacement t1 <> get_remplacement t2)
       then let error = sprintf("Indetermination with %s and %s") (as_string_transi t1) (as_string_transi t2) in
