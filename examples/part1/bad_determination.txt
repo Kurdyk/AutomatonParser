@@ -2,7 +2,7 @@ input symbols: a, b, c
 stack symbols: A, B, C, Z
 states: 1 , 2
 initial state: 1
-initial stack: D
+initial stack symbol: Z
 
 transitions:
 
@@ -12,6 +12,7 @@ transitions:
 
 (1 ,a ,A ,1 , A ; A )
 (1 ,b ,A ,1 , A ; B )
+(1, b, A, 2, A ; B)
 (1 ,c ,A ,2 , A )
 
 (1 ,a ,B ,1 , B ; A)

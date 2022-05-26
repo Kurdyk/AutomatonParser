@@ -13,7 +13,7 @@ rule main = parse
   | "stack symbols:" { STACK_SYM }
   | "states:" { STATES }
   | "initial state:" { INIT_STATE }
-  | "initial stack:" { INIT_STACK }
+  | "initial stack symbol:" { INIT_STACK }
   | "transitions:" { TRANSITION }
   | eof { EOF }
   | "," { COMMA }
